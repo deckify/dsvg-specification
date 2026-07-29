@@ -1,0 +1,16 @@
+# Dependencies / lockfiles
+node_modules
+pnpm-lock.yaml
+.pnpm-store
+
+# Builds / caches
+dist
+build
+.docusaurus
+.cache
+coverage
+
+# Generated / binary-ish assets
+*.compiled.svg
+*.min.js
+*.min.css

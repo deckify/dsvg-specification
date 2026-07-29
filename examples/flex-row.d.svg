@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-dsvg-version="0.1" width="300" height="100" viewBox="0 0 300 100">
+  <!-- Fallback geometry baked in for generic SVG preview -->
+  <g
+    data-dsvg-layout="flex"
+    data-dsvg-flex-direction="row"
+    data-dsvg-justify-content="space-between"
+    data-dsvg-align-items="center"
+    data-dsvg-gap="16"
+    data-dsvg-width="300"
+    data-dsvg-height="100"
+  >
+    <rect x="0" y="30" width="40" height="40" fill="#3366ff" />
+    <rect x="130" y="30" width="40" height="40" fill="#33cc66" />
+    <rect x="260" y="30" width="40" height="40" fill="#ff6633" />
+  </g>
+</svg>

@@ -1,0 +1,40 @@
+{
+  "name": "dsvg-standard",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.18.0",
+  "prettier": "./.prettierrc.mjs",
+  "scripts": {
+    "build": "pnpm -r --filter @deckify/dsvg run build && pnpm --filter dsvg-docs run build",
+    "build:dsvg": "pnpm --filter @deckify/dsvg run build",
+    "build:docs": "pnpm --filter dsvg-docs run build",
+    "dev:docs": "pnpm --filter dsvg-docs run start",
+    "test": "pnpm build:dsvg && pnpm --filter @deckify/dsvg run test",
+    "lint": "pnpm --filter @deckify/dsvg run lint",
+    "typecheck": "pnpm --filter @deckify/dsvg run typecheck && pnpm --filter dsvg-docs run typecheck",
+    "format": "pnpm exec prettier --write .",
+    "format:check": "pnpm exec prettier --check .",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm test && changeset publish",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.8",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.2.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3"
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "core-js"
+    ]
+  }
+}

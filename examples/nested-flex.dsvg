@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-dsvg-version="0.1" width="240" height="160" viewBox="0 0 240 160">
+  <g
+    data-dsvg-layout="flex"
+    data-dsvg-flex-direction="column"
+    data-dsvg-gap="12"
+    data-dsvg-padding="8"
+    data-dsvg-width="240"
+    data-dsvg-height="160"
+  >
+    <rect width="224" height="32" fill="#eeeeee" />
+    <g
+      data-dsvg-layout="flex"
+      data-dsvg-flex-direction="row"
+      data-dsvg-gap="8"
+      data-dsvg-width="224"
+      data-dsvg-height="100"
+      data-dsvg-flex-grow="1"
+    >
+      <rect width="40" height="40" fill="#3366ff" />
+      <rect width="40" height="40" fill="#33cc66" data-dsvg-flex-grow="1" />
+      <rect width="40" height="40" fill="#ff6633" />
+    </g>
+  </g>
+</svg>

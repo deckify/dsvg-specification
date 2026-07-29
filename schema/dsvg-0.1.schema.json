@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://deckify.github.io/dsvg-standard/schema/dsvg-0.1.schema.json",
+  "title": "DSVG 0.1 AST",
+  "description": "JSON Schema for a parsed Dynamic SVG (DSVG) 0.1 document AST. Source files are XML (.dsvg / .d.svg); this schema validates the in-memory tree after parsing.",
+  "type": "object",
+  "required": ["name", "type", "attributes", "children"],
+  "additionalProperties": false,
+  "properties": {
+    "name": { "const": "svg" },
+    "type": { "type": "string" },
+    "value": { "type": "string" },
+    "attributes": {
+      "type": "object",
+      "required": ["data-dsvg-version"],
+      "properties": {
+        "data-dsvg-version": { "const": "0.1" },
+        "xmlns": { "type": "string" },
+        "width": { "type": "string" },
+        "height": { "type": "string" },
+        "viewBox": { "type": "string" }
+      },
+      "additionalProperties": { "type": "string" }
+    },
+    "children": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/node" }
+    }
+  },
+  "$defs": {
+    "node": {
+      "type": "object",
+      "required": ["name", "type", "attributes", "children"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "value": { "type": "string" },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "properties": {
+            "data-dsvg-layout": { "const": "flex" },
+            "data-dsvg-flex-direction": {
+              "enum": ["row", "column", "row-reverse", "column-reverse"]
+            },
+            "data-dsvg-flex-wrap": { "enum": ["nowrap", "wrap", "wrap-reverse"] },
+            "data-dsvg-justify-content": {
+              "enum": [
+                "flex-start",
+                "center",
+                "flex-end",
+                "space-between",
+                "space-around",
+                "space-evenly"
+              ]
+            },
+            "data-dsvg-align-items": {
+              "enum": ["flex-start", "center", "flex-end", "stretch", "baseline"]
+            },
+            "data-dsvg-align-content": {
+              "enum": [
+                "flex-start",
+                "center",
+                "flex-end",
+                "stretch",
+                "space-between",
+                "space-around"
+              ]
+            },
+            "data-dsvg-align-self": {
+              "enum": ["auto", "flex-start", "center", "flex-end", "stretch", "baseline"]
+            },
+            "data-dsvg-gap": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+            "data-dsvg-row-gap": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+            "data-dsvg-column-gap": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+            "data-dsvg-padding": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+            "data-dsvg-padding-top": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+            "data-dsvg-padding-right": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+            "data-dsvg-padding-bottom": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+            "data-dsvg-padding-left": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+            "data-dsvg-width": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+            "data-dsvg-height": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+            "data-dsvg-flex-grow": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+            "data-dsvg-flex-shrink": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+            "data-dsvg-flex-basis": {
+              "anyOf": [{ "const": "auto" }, { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" }]
+            }
+          }
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/node" }
+        }
+      }
+    }
+  }
+}

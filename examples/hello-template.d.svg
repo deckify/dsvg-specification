@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-dsvg-version="0.1" width="200" height="80" viewBox="0 0 200 80">
+  <!-- Fallback-safe .d.svg preview. Dynamic twin: hello-template.dsvg -->
+  <text x="10" y="40" font-size="16" fill="#111">Hello World</text>
+  <rect x="10" y="50" width="80" height="12" fill="#3366ff" />
+</svg>

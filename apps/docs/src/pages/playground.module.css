@@ -1,0 +1,182 @@
+.page {
+  width: min(1440px, 100%);
+  min-height: calc(100vh - var(--ifm-navbar-height));
+  padding: 3rem 2rem;
+  margin: 0 auto;
+}
+
+.header {
+  display: grid;
+  gap: 0.5rem;
+  padding-bottom: 2rem;
+}
+
+.header h1,
+.header p,
+.panelHeader h2 {
+  margin: 0;
+}
+
+.header h1 {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  letter-spacing: -0.04em;
+}
+
+.header p:last-child {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1.05rem;
+}
+
+.eyebrow {
+  color: var(--ifm-color-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.panel {
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 0.75rem;
+  background: var(--ifm-background-surface-color);
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.panelHeader h2 {
+  font-size: 0.9rem;
+}
+
+.panelHeader span {
+  color: var(--ifm-color-emphasis-600);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.editor {
+  width: 100%;
+  padding: 1rem;
+  resize: vertical;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  background: var(--ifm-code-background);
+  color: var(--ifm-font-color-base);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+.editor:focus {
+  box-shadow: inset 0 0 0 2px var(--ifm-color-primary);
+}
+
+.codeEditorShell {
+  min-width: 0;
+  overflow: hidden;
+  border: 0;
+  background: var(--ifm-code-background);
+}
+
+.codeEditorShell :global(.cm-editor) {
+  height: 100%;
+  font-size: 0.82rem;
+  background: transparent;
+}
+
+.codeEditorShell :global(.cm-scroller) {
+  font-family: var(--ifm-font-family-monospace);
+  line-height: 1.6;
+}
+
+.codeEditorShell :global(.cm-focused) {
+  outline: 0;
+  box-shadow: inset 0 0 0 2px var(--ifm-color-primary);
+}
+
+.sourceEditor {
+  min-height: 24rem;
+  height: 24rem;
+}
+
+.variablesEditor {
+  min-height: 8rem;
+  height: 8rem;
+}
+
+.outputEditor {
+  min-height: 12rem;
+  height: 12rem;
+}
+
+.preview {
+  display: grid;
+  min-height: 24rem;
+  place-items: stretch;
+  padding: 1rem;
+  background-color: #f4f6fa;
+  background-image:
+    linear-gradient(45deg, #e8ebf1 25%, transparent 25%),
+    linear-gradient(-45deg, #e8ebf1 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e8ebf1 75%),
+    linear-gradient(-45deg, transparent 75%, #e8ebf1 75%);
+  background-position:
+    0 0,
+    0 8px,
+    8px -8px,
+    -8px 0;
+  background-size: 16px 16px;
+}
+
+.previewFrame {
+  width: 100%;
+  height: 100%;
+  min-height: 22rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: #fff;
+}
+
+.error {
+  overflow: auto;
+  padding: 1rem;
+  margin: 0;
+  border-radius: 0.5rem;
+  background: #fff0f0;
+  color: #b42318;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+
+[data-theme='dark'] .error {
+  background: #351414;
+  color: #ffb4ab;
+}
+
+@media (max-width: 996px) {
+  .page {
+    padding: 2rem 1rem;
+  }
+
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+}

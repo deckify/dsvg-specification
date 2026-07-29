@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-dsvg-version="0.1" width="100" height="40" viewBox="0 0 100 40">
+  <text x="0" y="20">{{#items}}nope{{/items}}</text>
+</svg>

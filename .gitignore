@@ -1,0 +1,21 @@
+# Dependencies
+node_modules
+
+# Builds / caches
+dist
+build
+.docusaurus
+.cache
+coverage
+*.tsbuildinfo
+*.tgz
+
+# Package manager
+.pnpm-store
+
+# Logs / OS / env
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example

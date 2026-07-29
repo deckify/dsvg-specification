@@ -1,0 +1,10 @@
+Dynamic SVG (DSVG)
+Copyright 2026 Deckify
+
+This product includes software developed for the DSVG project.
+
+This product bundles and depends on third-party components, including:
+
+- yoga-layout (Meta Platforms, Inc.) — MIT License
+- svgson — MIT License
+- @shuding/opentype.js — MIT License (derived from opentype.js)
