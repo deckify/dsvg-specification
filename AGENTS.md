@@ -26,3 +26,9 @@
 
 - Keep the Docusaurus site under `apps/docs` in sync with the normative spec
 - Spec version (`0.1`) is distinct from package semver
+
+## Git Commits
+
+- When creating commit messages, always follow the `conventional-commit` skill at `.agents/skills/conventional-commit/SKILL.md`
+- Use Conventional Commits (`type(scope): description`) with the skill's structured XML workflow
+- Keep messages concise: short imperative subject, no fluff; omit body unless needed for why, breaking changes, or issue refs

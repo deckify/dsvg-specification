@@ -12,7 +12,7 @@
     "dev:docs": "pnpm --filter dsvg-docs run start",
     "test": "pnpm build:dsvg && pnpm --filter @deckify/dsvg run test",
     "lint": "pnpm --filter @deckify/dsvg run lint",
-    "typecheck": "pnpm --filter @deckify/dsvg run typecheck && pnpm --filter dsvg-docs run typecheck",
+    "typecheck": "pnpm build:dsvg && pnpm --filter @deckify/dsvg run typecheck && pnpm --filter dsvg-docs run typecheck",
     "format": "pnpm exec prettier --write .",
     "format:check": "pnpm exec prettier --check .",
     "changeset": "changeset",

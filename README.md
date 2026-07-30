@@ -1,5 +1,7 @@
 # Dynamic SVG (DSVG)
 
+[![npm](https://img.shields.io/npm/v/@deckify/dsvg.svg)](https://www.npmjs.com/package/@deckify/dsvg)
+
 DSVG is an SVG-compatible format for **dynamic** graphics:
 
 - Yoga flexbox layout on `<g>` groups (`data-dsvg-*`)

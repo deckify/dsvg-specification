@@ -15,9 +15,9 @@ pnpm version-packages   # apply versions + changelogs
 pnpm release            # build dsvg and publish
 ```
 
-On `main`, [`.github/workflows/release.yml`](https://github.com/deckify/dsvg-standard/blob/main/.github/workflows/release.yml) runs format/lint/typecheck/test, maintains a release PR, and publishes when `NPM_TOKEN` is configured in the repository secrets.
+PR and push quality gates live in [`.github/workflows/quality.yml`](https://github.com/deckify/dsvg-standard/blob/main/.github/workflows/quality.yml).
 
-PR and push quality gates live in [`.github/workflows/ci.yml`](https://github.com/deckify/dsvg-standard/blob/main/.github/workflows/ci.yml).
+After a successful Quality run on `main`, [`.github/workflows/release.yml`](https://github.com/deckify/dsvg-standard/blob/main/.github/workflows/release.yml) maintains a Changesets release PR and publishes when `NPM_TOKEN` is configured in the repository secrets.
 
 ## Specification vs package versions
 
@@ -30,4 +30,4 @@ Implementations may ship multiple package versions while supporting the same spe
 
 ## GitHub Pages
 
-Docs deploy from [`.github/workflows/deploy-pages.yml`](https://github.com/deckify/dsvg-standard/blob/main/.github/workflows/deploy-pages.yml). In the GitHub repository settings, set Pages source to **GitHub Actions**. Target URL: `https://deckify.github.io/dsvg-standard/`.
+Docs deploy from [`.github/workflows/deploy-pages.yml`](https://github.com/deckify/dsvg-standard/blob/main/.github/workflows/deploy-pages.yml) after a successful Quality run on `main` (or via manual `workflow_dispatch`). In the GitHub repository settings, set Pages source to **GitHub Actions**. Target URL: `https://deckify.github.io/dsvg-standard/`.

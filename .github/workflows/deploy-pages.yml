@@ -1,14 +1,16 @@
 name: Deploy docs to GitHub Pages
 
 on:
-  push:
-    branches: [main]
+  workflow_run:
+    workflows: [Quality checks]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read
 
 concurrency:
   group: pages
@@ -16,10 +18,17 @@ concurrency:
 
 jobs:
   build:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -35,20 +44,8 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Format
-        run: pnpm format:check
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Typecheck
-        run: pnpm typecheck
-
       - name: Build library
         run: pnpm build:dsvg
-
-      - name: Test
-        run: pnpm --filter @deckify/dsvg run test
 
       - name: Build docs
         run: pnpm build:docs

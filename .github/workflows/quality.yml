@@ -1,4 +1,4 @@
-name: CI
+name: Quality checks
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   pull_request:
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: quality-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -40,11 +40,8 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-      - name: Build library
-        run: pnpm build:dsvg
-
       - name: Test
         run: pnpm --filter @deckify/dsvg run test
 
-      - name: Build
-        run: pnpm build
+      - name: Build docs
+        run: pnpm build:docs
