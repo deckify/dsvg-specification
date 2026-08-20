@@ -12,7 +12,8 @@ parse XML
   → validate resolved typed values
   → measure flex `<text>` with supplied OpenType fonts
   → apply Yoga layout (deepest-first)
-  → remove data-dsvg-* attributes (default)
+  → apply print or preview output
+  → remove data-dsvg-* attributes (default; `keepMeta` may preserve print metadata)
   → serialize SVG
 ```
 
@@ -27,9 +28,13 @@ const { svg, document } = await compileDsvg(source, {
   textMeasurement: 'font',
   strictMissing: true,
   stripDsvgAttributes: true,
+  outputMode: 'print', // or 'preview'
+  keepMeta: false,
 });
 ```
 
 Pass `textMeasurement: 'skip'` to disable intrinsic text measurement when fonts are unavailable.
+
+For print trim/bleed/corner metadata and preview cropping, see [Print metadata](./print-metadata.md).
 
 For a full TypeScript walkthrough (Node `readFileSync`, browser `fetch`, weight matching, and errors), see [TypeScript](../implementations/typescript.md).

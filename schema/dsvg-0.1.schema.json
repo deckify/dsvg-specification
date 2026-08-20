@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://deckify.github.io/dsvg-standard/schema/dsvg-0.1.schema.json",
+  "$id": "https://deckify.github.io/dsvg-specification/schema/dsvg-0.1.schema.json",
   "title": "DSVG 0.1 AST",
   "description": "JSON Schema for a parsed Dynamic SVG (DSVG) 0.1 document AST. Source files are XML (.dsvg / .d.svg); this schema validates the in-memory tree after parsing.",
   "type": "object",
@@ -18,7 +18,22 @@
         "xmlns": { "type": "string" },
         "width": { "type": "string" },
         "height": { "type": "string" },
-        "viewBox": { "type": "string" }
+        "viewBox": { "type": "string" },
+        "data-dsvg-print-units": { "enum": ["px", "mm", "in"] },
+        "data-dsvg-trim-width": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+        "data-dsvg-trim-height": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+        "data-dsvg-bleed": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+        "data-dsvg-bleed-top": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+        "data-dsvg-bleed-right": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+        "data-dsvg-bleed-bottom": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+        "data-dsvg-bleed-left": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+        "data-dsvg-safe-area": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+        "data-dsvg-safe-area-top": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+        "data-dsvg-safe-area-right": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+        "data-dsvg-safe-area-bottom": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+        "data-dsvg-safe-area-left": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+        "data-dsvg-corner-radius": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" },
+        "data-dsvg-dpi": { "type": "string", "pattern": "^\\d+(\\.\\d+)?$" }
       },
       "additionalProperties": { "type": "string" }
     },

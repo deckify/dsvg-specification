@@ -98,6 +98,9 @@ await compileDsvg(source, {
 | `applyYogaLayout`       | Apply flex layout (`fonts` / `textMeasurement`)  |
 | `compileDsvg`           | Full compile pipeline                            |
 | `compileDsvgDocument`   | Compile from an existing AST                     |
+| `readPrintMeta`         | Resolve root print metadata                      |
+| `resolveTrimRect`       | Map trim/bleed into user-space coordinates       |
+| `applyPreviewOutput`    | Crop bleed and clip corners                      |
 | `createFontMeasurer`    | Build an OpenType text measurer                  |
 | `isDsvgFilename`        | Recognize `.dsvg` / `.d.svg`                     |
 | `toCompiledSvgFilename` | Map source filename → `.svg`                     |
@@ -111,6 +114,8 @@ type CompileOptions = {
   variables?: Record<string, unknown>;
   strictMissing?: boolean;
   stripDsvgAttributes?: boolean;
+  keepMeta?: boolean; // preserve print metadata when stripping
+  outputMode?: 'print' | 'preview'; // default: 'print'
   fonts?: FontOptions[];
   textMeasurement?: 'font' | 'skip'; // default: 'font'
 };
@@ -122,6 +127,8 @@ type FontOptions = {
   style?: 'normal' | 'italic';
 };
 ```
+
+`outputMode: 'preview'` crops to trim and clips rounded corners. See [Print metadata](/guide/print-metadata).
 
 `applyYogaLayout(document, { fonts, textMeasurement })` accepts the same font options when you run layout alone.
 
@@ -150,6 +157,7 @@ type DsvgError = {
 | `LAYOUT_ERROR`              | Yoga layout failed unexpectedly                                 |
 | `TEXT_MEASUREMENT_REQUIRED` | Intrinsic flex text needs fonts, but none match / none provided |
 | `TEXT_MEASUREMENT_FAILED`   | Font parse or glyph measurement failed                          |
+| `INVALID_PRINT_PREVIEW`     | Preview crop failed (missing trim, artboard size, or bleed box) |
 
 ## Try it
 

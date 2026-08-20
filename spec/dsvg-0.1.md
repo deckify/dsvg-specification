@@ -10,6 +10,7 @@ Dynamic SVG (DSVG) is an SVG-compatible document format that adds:
 
 1. **Yoga flexbox layout** on SVG `<g>` groups via `data-dsvg-*` attributes
 2. **Mustache variable interpolation** in text nodes and attribute values
+3. **Optional print metadata** on the root `<svg>` (trim, bleed, safe area, corner radius) with print and preview compile output
 
 A DSVG document remains valid SVG/XML. Generic SVG software may open it and ignore unrecognized attributes. A DSVG compiler resolves templates, applies layout, and emits ordinary static SVG.
 
@@ -55,11 +56,49 @@ The root element MUST be `<svg>` and SHOULD declare:
 
 ### 4.2 Attribute namespace
 
-All DSVG control attributes use the `data-dsvg-` prefix. Implementations MUST strip these attributes from compiled output by default.
+All DSVG control attributes use the `data-dsvg-` prefix. Implementations MUST strip these attributes from compiled output by default. When `keepMeta` is enabled, implementations MUST preserve §4.4 print metadata attributes while still stripping other `data-dsvg-*` attributes (including `data-dsvg-version` and layout attributes).
 
 ### 4.3 Fallback previews
 
 Authors SHOULD leave baked SVG geometry and text content that remain useful before compilation. Compilers overwrite geometry and text as required by layout and templating.
+
+### 4.4 Print metadata
+
+Optional print production metadata MAY appear on the root `<svg>` only. These attributes describe finished size, bleed, safe area, corner radius, and raster intent. They do not participate in Yoga layout.
+
+Native SVG `width` / `height` / `viewBox` describe the artboard in SVG user units and SHOULD represent the full **bleed box**. Finished trim size is declared separately in print units.
+
+| Attribute                    | Values            | Notes                                                              |
+| ---------------------------- | ----------------- | ------------------------------------------------------------------ |
+| `data-dsvg-print-units`      | `px`, `mm`, `in`  | Optional; **default `px`** when any print metadata is present      |
+| `data-dsvg-trim-width`       | finite number > 0 | Finished width in print units; MUST be paired with `trim-height`   |
+| `data-dsvg-trim-height`      | finite number > 0 | Finished height in print units; MUST be paired with `trim-width`   |
+| `data-dsvg-bleed`            | finite number ≥ 0 | Uniform bleed; side attributes override                            |
+| `data-dsvg-bleed-top`        | finite number ≥ 0 | Per-side bleed (canvas edge → trim)                                |
+| `data-dsvg-bleed-right`      | finite number ≥ 0 | Per-side bleed                                                     |
+| `data-dsvg-bleed-bottom`     | finite number ≥ 0 | Per-side bleed                                                     |
+| `data-dsvg-bleed-left`       | finite number ≥ 0 | Per-side bleed                                                     |
+| `data-dsvg-safe-area`        | finite number ≥ 0 | Uniform safe inset from trim; side attributes override             |
+| `data-dsvg-safe-area-top`    | finite number ≥ 0 | Per-side safe inset                                                |
+| `data-dsvg-safe-area-right`  | finite number ≥ 0 | Per-side safe inset                                                |
+| `data-dsvg-safe-area-bottom` | finite number ≥ 0 | Per-side safe inset                                                |
+| `data-dsvg-safe-area-left`   | finite number ≥ 0 | Per-side safe inset                                                |
+| `data-dsvg-corner-radius`    | finite number ≥ 0 | Finished (trim) corner radius; `0` = square cut                    |
+| `data-dsvg-dpi`              | finite number > 0 | Optional rasterization intent; **no default** (omit = unspecified) |
+
+**Semantics:**
+
+1. Bleed is the inset from the bleed-box edge to the trim line.
+2. Safe area is a further inset from the trim line to the content-safe region. It is metadata only and MUST NOT be applied as an additional crop in preview output.
+3. Corner radius is the trim-corner radius. Print output MUST NOT clip to it; preview output MUST clip when the radius is greater than `0` (§7.3).
+4. Trim width/height are the finished size after cutting.
+5. `dpi` is production intent for downstream tools. Preview mapping MUST NOT use `dpi`.
+
+When `print-units` is omitted and any other print metadata attribute is present, implementations MUST treat units as `px`. With `px`, print lengths align with SVG user units when the artboard matches the bleed box.
+
+Side insets resolve like padding: a side attribute overrides the uniform value for that side; missing sides inherit the uniform value (default `0`).
+
+Print metadata attributes MUST NOT appear on non-root elements.
 
 ## 5. Layout vocabulary
 
@@ -168,7 +207,8 @@ parse XML
   → validate resolved typed layout values
   → measure flex text with supplied fonts
   → apply Yoga layout (deepest-first)
-  → remove data-dsvg-* attributes (default)
+  → apply print or preview output (§7.3)
+  → remove data-dsvg-* attributes (default; keepMeta MAY preserve print metadata)
   → serialize SVG
 ```
 
@@ -187,9 +227,50 @@ Each step MUST be pure with respect to caller input (deep-clone before mutation)
 
 Compile/layout options SHOULD accept supplied font resources for §5.4 text measurement and MAY accept an explicit skip mode.
 
+Compile options MUST accept:
+
+| Option                | Values             | Default | Purpose                                                 |
+| --------------------- | ------------------ | ------- | ------------------------------------------------------- |
+| `outputMode`          | `print`, `preview` | `print` | Full bleed canvas vs trimmed preview (§7.3)             |
+| `keepMeta`            | boolean            | `false` | When stripping, preserve §4.4 print metadata attributes |
+| `stripDsvgAttributes` | boolean            | `true`  | Remove `data-dsvg-*` attributes from output             |
+
 ### 7.2 Errors
 
-Errors MUST include a machine-readable `code`, human `message`, and optional `path` into the AST. Implementations SHOULD batch multiple validation errors when practical. Implementations that support §5.4 SHOULD emit distinct codes when fonts are required but missing and when font measurement fails.
+Errors MUST include a machine-readable `code`, human `message`, and optional `path` into the AST. Implementations SHOULD batch multiple validation errors when practical. Implementations that support §5.4 SHOULD emit distinct codes when fonts are required but missing and when font measurement fails. Preview mapping failures MUST use a distinct code (e.g. `INVALID_PRINT_PREVIEW`).
+
+### 7.3 Print and preview output
+
+After layout, compilers apply an output mode:
+
+| Mode      | Behavior                                                                      |
+| --------- | ----------------------------------------------------------------------------- |
+| `print`   | Keep the full bleed-box artboard. Do not crop or clip to trim/corners.        |
+| `preview` | Crop to the trim rectangle and clip rounded corners when `corner-radius` > 0. |
+
+**User-space mapping** for preview (and for reading trim geometry) MUST use:
+
+```
+bleedBoxW = trimWidth + bleedLeft + bleedRight
+bleedBoxH = trimHeight + bleedTop + bleedBottom
+sx = svgWidth / bleedBoxW
+sy = svgHeight / bleedBoxH
+trimRect = { x: bleedLeft*sx, y: bleedTop*sy, w: trimWidth*sx, h: trimHeight*sy }
+cornerR_user = cornerRadius * min(sx, sy)
+```
+
+where `svgWidth` / `svgHeight` are the root element's finite native `width` / `height` in user units, and trim/bleed/corner values are resolved print-unit lengths (§4.4). Documents SHOULD keep `sx` and `sy` equal (uniform scale).
+
+Preview MUST fail compilation when trim width/height are missing or unpaired, when root `width`/`height` are missing or non-finite, or when bleed-box dimensions are not positive.
+
+**Preview transform** MUST:
+
+1. Resolve the trim rectangle in the current user space
+2. Wrap existing root children in a group translated by `(-trimRect.x, -trimRect.y)`
+3. Set root `viewBox="0 0 trimRect.w trimRect.h"` and `width` / `height` to those user sizes
+4. When `cornerRadius > 0`, attach a rounded-rect clip path of size `trimRect.w` × `trimRect.h` with `rx`/`ry` = `cornerR_user` to the wrapper group
+
+Safe-area MUST NOT affect preview cropping.
 
 ## 8. Examples
 
@@ -223,6 +304,29 @@ Errors MUST include a machine-readable `code`, human `message`, and optional `pa
 ```
 
 With variables `{ "name": "Alice", "width": 120 }` this compiles to static text and `width="120"`.
+
+### 8.3 Print metadata
+
+```xml
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  data-dsvg-version="0.1"
+  width="750"
+  height="1050"
+  viewBox="0 0 750 1050"
+  data-dsvg-trim-width="690"
+  data-dsvg-trim-height="990"
+  data-dsvg-bleed="30"
+  data-dsvg-safe-area="24"
+  data-dsvg-corner-radius="24"
+  data-dsvg-dpi="300"
+>
+  <rect width="750" height="1050" fill="#f5f5f5" />
+  <rect x="30" y="30" width="690" height="990" fill="#ffffff" />
+</svg>
+```
+
+Units default to `px`. `outputMode: "print"` keeps the full 750×1050 canvas. `outputMode: "preview"` crops to the 690×990 trim and clips corners with radius 24.
 
 ## 9. Versioning
 

@@ -21,7 +21,8 @@ export type DsvgErrorCode =
   | 'INVALID_VARIABLE_TYPE'
   | 'LAYOUT_ERROR'
   | 'TEXT_MEASUREMENT_REQUIRED'
-  | 'TEXT_MEASUREMENT_FAILED';
+  | 'TEXT_MEASUREMENT_FAILED'
+  | 'INVALID_PRINT_PREVIEW';
 
 export type DsvgError = {
   code: DsvgErrorCode;
@@ -64,10 +65,49 @@ export type LayoutOptions = {
   textMeasurement?: TextMeasurementMode;
 };
 
+/** Compile output mode for print production vs trimmed preview. */
+export type OutputMode = 'print' | 'preview';
+
+export type EdgeInsets = {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+};
+
+export type PrintTrimSize = {
+  width: number;
+  height: number;
+};
+
+export type PrintMeta = {
+  units: 'px' | 'mm' | 'in';
+  trim?: PrintTrimSize;
+  bleed: EdgeInsets;
+  safeArea: EdgeInsets;
+  cornerRadius?: number;
+  dpi?: number;
+};
+
+export type TrimRect = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  cornerRadius: number;
+};
+
 export type CompileOptions = RenderTemplateOptions &
   LayoutOptions & {
     /** Strip `data-dsvg-*` attributes from output. Default: true */
     stripDsvgAttributes?: boolean;
+    /**
+     * When stripping, preserve print metadata attributes (§4.4).
+     * Default: false. Ignored when `stripDsvgAttributes` is false.
+     */
+    keepMeta?: boolean;
+    /** `print` keeps the bleed box; `preview` crops to trim and clips corners. Default: `print` */
+    outputMode?: OutputMode;
     variables?: TemplateVariables;
   };
 

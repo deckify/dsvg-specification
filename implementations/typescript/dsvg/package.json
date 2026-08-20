@@ -12,10 +12,10 @@
     "mustache",
     "template"
   ],
-  "homepage": "https://deckify.github.io/dsvg-standard/",
+  "homepage": "https://deckify.github.io/dsvg-specification/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/deckify/dsvg-standard.git",
+    "url": "https://github.com/deckify/dsvg-specification.git",
     "directory": "implementations/typescript/dsvg"
   },
   "files": [

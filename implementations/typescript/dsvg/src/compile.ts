@@ -2,6 +2,7 @@ import { cloneDocument } from './clone.js';
 import { DsvgCompileError } from './errors.js';
 import { applyYogaLayout } from './layout.js';
 import { parseDsvg, serializeDsvg } from './parse.js';
+import { applyPreviewOutput } from './print-output.js';
 import { stripDsvgAttributes } from './strip.js';
 import { renderTemplate } from './template.js';
 import type { CompileOptions, CompileResult, DsvgDocument } from './types.js';
@@ -37,8 +38,12 @@ export const compileDsvgDocument = async (
     textMeasurement: options.textMeasurement,
   });
 
+  if (options.outputMode === 'preview') {
+    current = applyPreviewOutput(current);
+  }
+
   if (options.stripDsvgAttributes !== false) {
-    current = stripDsvgAttributes(current);
+    current = stripDsvgAttributes(current, { keepMeta: options.keepMeta === true });
   }
 
   return {

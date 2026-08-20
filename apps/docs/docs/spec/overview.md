@@ -7,12 +7,14 @@ title: Specification overview
 
 **Status:** Draft
 
-The normative specification lives in the repository at [`spec/dsvg-0.1.md`](https://github.com/deckify/dsvg-standard/blob/main/spec/dsvg-0.1.md).
+The normative specification lives in the repository at [`spec/dsvg-0.1.md`](https://github.com/deckify/dsvg-specification/blob/main/spec/dsvg-0.1.md).
 
 Highlights:
 
 - Root `<svg>` must declare `data-dsvg-version="0.1"`
 - Control attributes use the `data-dsvg-` prefix
+- Optional root print metadata: trim, bleed, safe area, corner radius, dpi
+- Compile `outputMode`: `print` (full bleed) or `preview` (crop + corner clip)
 - Source files use `.dsvg` or `.d.svg`; compiled files use `.svg`
 - Flex `<text>` measurement uses supplied OpenType fonts
 - Spec version and package semver are independent

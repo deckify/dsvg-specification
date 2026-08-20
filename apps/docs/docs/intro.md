@@ -11,6 +11,7 @@ title: Introduction
 1. **Yoga flexbox layout** on SVG `<g>` groups
 2. **Mustache variable interpolation** in attributes and text
 3. **Deterministic OpenType text measurement** for flex `<text>` children
+4. **Print metadata** on the root (trim, bleed, safe area, corner radius) with print/preview output
 
 A DSVG file remains valid SVG/XML. A compiler resolves templates, measures text from supplied fonts, applies layout, and emits ordinary static SVG.
 

@@ -18,7 +18,7 @@ examples/                     # .dsvg / .d.svg fixtures and compiled .svg
 implementations/
   typescript/dsvg/            # @deckify/dsvg reference package
 apps/
-  docs/                       # Docs site → deckify.github.io/dsvg-standard
+  docs/                       # Docs site → deckify.github.io/dsvg-specification
 ```
 
 ## File extensions
@@ -57,7 +57,7 @@ pnpm --filter dsvg-docs start
 pnpm --filter dsvg-docs build
 ```
 
-Published at [https://deckify.github.io/dsvg-standard/](https://deckify.github.io/dsvg-standard/).
+Published at [https://deckify.github.io/dsvg-specification/](https://deckify.github.io/dsvg-specification/).
 
 ## Versioning and releases
 

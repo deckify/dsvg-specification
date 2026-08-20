@@ -7,9 +7,9 @@ const config: Config = {
   tagline: 'DSVG 0.1 — Yoga layout and Mustache templating for SVG',
   favicon: 'img/favicon.svg',
   url: 'https://deckify.github.io',
-  baseUrl: '/dsvg-standard/',
+  baseUrl: '/dsvg-specification/',
   organizationName: 'deckify',
-  projectName: 'dsvg-standard',
+  projectName: 'dsvg-specification',
   onBrokenLinks: 'throw',
   markdown: {
     hooks: {
@@ -51,7 +51,7 @@ const config: Config = {
           position: 'left',
         },
         {
-          href: 'https://github.com/deckify/dsvg-standard',
+          href: 'https://github.com/deckify/dsvg-specification',
           label: 'GitHub',
           position: 'right',
         },
@@ -73,7 +73,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/deckify/dsvg-standard',
+              href: 'https://github.com/deckify/dsvg-specification',
             },
           ],
         },

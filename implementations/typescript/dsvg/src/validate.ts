@@ -7,10 +7,14 @@ import {
   FLEX_DIRECTION_VALUES,
   FLEX_WRAP_VALUES,
   JUSTIFY_CONTENT_VALUES,
+  PRINT_META_ATTRS,
+  PRINT_META_ATTR_SET,
+  PRINT_UNITS_VALUES,
   isFiniteNumberString,
   isOneOf,
 } from './attributes.js';
 import { createError } from './errors.js';
+import { hasPrintMetaAttributes } from './print-meta.js';
 import type { DsvgDocument, DsvgError, DsvgNode, ValidationResult } from './types.js';
 import { DSVG_ATTR_PREFIX, DSVG_SPEC_VERSION } from './types.js';
 
@@ -45,6 +49,26 @@ const KNOWN_LAYOUT_ATTRS = new Set<string>([
   ...CHILD_ONLY_ATTRS,
   CHILD_LAYOUT_ATTRS.width,
   CHILD_LAYOUT_ATTRS.height,
+]);
+
+const NON_NEGATIVE_PRINT_ATTRS = new Set<string>([
+  PRINT_META_ATTRS.bleed,
+  PRINT_META_ATTRS.bleedTop,
+  PRINT_META_ATTRS.bleedRight,
+  PRINT_META_ATTRS.bleedBottom,
+  PRINT_META_ATTRS.bleedLeft,
+  PRINT_META_ATTRS.safeArea,
+  PRINT_META_ATTRS.safeAreaTop,
+  PRINT_META_ATTRS.safeAreaRight,
+  PRINT_META_ATTRS.safeAreaBottom,
+  PRINT_META_ATTRS.safeAreaLeft,
+  PRINT_META_ATTRS.cornerRadius,
+]);
+
+const POSITIVE_PRINT_ATTRS = new Set<string>([
+  PRINT_META_ATTRS.trimWidth,
+  PRINT_META_ATTRS.trimHeight,
+  PRINT_META_ATTRS.dpi,
 ]);
 
 /**
@@ -162,6 +186,7 @@ const isFlexGroup = (node: DsvgNode): boolean =>
  * @param path - AST path for diagnostics.
  * @param errors - Error accumulator.
  * @param parentIsFlex - Whether the parent is a flex `<g>`.
+ * @param isRoot - Whether this node is the document root `<svg>`.
  * @returns Nothing.
  */
 const validateNode = (
@@ -169,6 +194,7 @@ const validateNode = (
   path: string,
   errors: DsvgError[],
   parentIsFlex: boolean,
+  isRoot: boolean,
 ): void => {
   if (node.type === 'text' || node.name === '') {
     if (node.value) {
@@ -187,6 +213,19 @@ const validateNode = (
     }
 
     if (attr === `${DSVG_ATTR_PREFIX}version`) {
+      continue;
+    }
+
+    if (PRINT_META_ATTR_SET.has(attr)) {
+      if (!isRoot) {
+        errors.push(
+          createError(
+            'INVALID_ATTRIBUTE',
+            `${attr} is only valid on the root <svg>`,
+            `${path}@${attr}`,
+          ),
+        );
+      }
       continue;
     }
 
@@ -335,8 +374,62 @@ const validateNode = (
       child.type === 'text' || child.name === ''
         ? joinPath(path, `text()[${index}]`)
         : joinPath(path, `${child.name}[${index}]`);
-    validateNode(child, childPath, errors, isFlex);
+    validateNode(child, childPath, errors, isFlex, false);
   });
+};
+
+/**
+ * Validates root print metadata attribute values and pairing rules.
+ * @param document - Document root.
+ * @param errors - Error accumulator.
+ * @returns Nothing.
+ */
+const validatePrintMeta = (document: DsvgDocument, errors: DsvgError[]): void => {
+  const { attributes } = document;
+  if (!hasPrintMetaAttributes(attributes)) {
+    return;
+  }
+
+  validateKeyword(
+    errors,
+    'svg',
+    PRINT_META_ATTRS.printUnits,
+    attributes[PRINT_META_ATTRS.printUnits],
+    PRINT_UNITS_VALUES,
+  );
+
+  for (const attr of NON_NEGATIVE_PRINT_ATTRS) {
+    validateNumberAttr(errors, 'svg', attr, attributes[attr], { min: 0 });
+  }
+
+  for (const attr of POSITIVE_PRINT_ATTRS) {
+    const value = attributes[attr];
+    if (value === undefined) {
+      continue;
+    }
+    validateNumberAttr(errors, 'svg', attr, value, { min: 0 });
+    if (isFiniteNumberString(value) && Number(value) <= 0) {
+      errors.push(
+        createError(
+          'INVALID_VALUE',
+          `Invalid ${attr} value "${value}". Expected a number > 0`,
+          `svg@${attr}`,
+        ),
+      );
+    }
+  }
+
+  const trimWidth = attributes[PRINT_META_ATTRS.trimWidth];
+  const trimHeight = attributes[PRINT_META_ATTRS.trimHeight];
+  if ((trimWidth === undefined) !== (trimHeight === undefined)) {
+    errors.push(
+      createError(
+        'INVALID_ATTRIBUTE',
+        `${PRINT_META_ATTRS.trimWidth} and ${PRINT_META_ATTRS.trimHeight} must be set together`,
+        'svg',
+      ),
+    );
+  }
 };
 
 /**
@@ -372,7 +465,8 @@ export const validateDsvg = (document: DsvgDocument): ValidationResult => {
     );
   }
 
-  validateNode(document, 'svg', errors, false);
+  validatePrintMeta(document, errors);
+  validateNode(document, 'svg', errors, false, true);
 
   if (errors.length > 0) {
     return { ok: false, errors };

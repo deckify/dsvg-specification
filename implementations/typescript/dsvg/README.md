@@ -7,6 +7,7 @@ DSVG extends SVG with:
 - Yoga flexbox layout on `<g>` via `data-dsvg-*` attributes
 - Mustache variable interpolation in attributes and text
 - Deterministic OpenType text measurement for flex `<text>` children
+- Optional root print metadata (trim, bleed, safe area, corner radius) with `print` / `preview` output modes
 
 Source files use `.dsvg` or `.d.svg`. Compilation emits ordinary `.svg`.
 
@@ -65,8 +66,12 @@ await compileDsvg(source, {
 | `renderTemplate(document, variables, options?)` | Resolve Mustache variables       |
 | `applyYogaLayout(document, options?)`           | Apply flex layout                |
 | `compileDsvg(source, options?)`                 | Full pipeline                    |
+| `readPrintMeta(document)`                       | Resolve root print metadata      |
+| `applyPreviewOutput(document)`                  | Crop bleed and clip corners      |
 | `createFontMeasurer(fonts)`                     | Build an OpenType text measurer  |
 | `isDsvgFilename(name)`                          | Recognize `.dsvg` / `.d.svg`     |
+
+Compile options include `outputMode: 'print' | 'preview'` (default `print`) and `keepMeta` to retain print attributes when stripping.
 
 Supported specification version: **0.1** (`DSVG_SPEC_VERSION`).
 

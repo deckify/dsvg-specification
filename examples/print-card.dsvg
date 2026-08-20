@@ -1,0 +1,17 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  data-dsvg-version="0.1"
+  width="750"
+  height="1050"
+  viewBox="0 0 750 1050"
+  data-dsvg-trim-width="690"
+  data-dsvg-trim-height="990"
+  data-dsvg-bleed="30"
+  data-dsvg-safe-area="24"
+  data-dsvg-corner-radius="24"
+  data-dsvg-dpi="300"
+>
+  <rect width="750" height="1050" fill="#f5f5f5" />
+  <rect x="30" y="30" width="690" height="990" fill="#ffffff" />
+  <text x="375" y="540" text-anchor="middle" font-size="48" fill="#111">Card</text>
+</svg>

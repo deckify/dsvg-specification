@@ -11,6 +11,7 @@ const sidebars: SidebarsConfig = {
         'guide/layout',
         'guide/templating',
         'guide/compile-pipeline',
+        'guide/print-metadata',
       ],
     },
     {
