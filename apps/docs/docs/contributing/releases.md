@@ -15,6 +15,8 @@ pnpm version-packages   # apply versions + changelogs
 pnpm release            # build dsvg and publish
 ```
 
+Husky pre-commit runs `pnpm check-changeset` (`scripts/check-changeset.mjs`). Staged changes to publishable packages under `implementations/typescript/*` must include a staged `.changeset/*.md` file. Spec/docs-only commits are fine without one. Emergency bypass: `SKIP_CHANGESET_CHECK=1`.
+
 PR and push quality gates live in [`.github/workflows/quality.yml`](https://github.com/deckify/dsvg-specification/blob/main/.github/workflows/quality.yml).
 
 After a successful Quality run on `main`, [`.github/workflows/release.yml`](https://github.com/deckify/dsvg-specification/blob/main/.github/workflows/release.yml) maintains a Changesets release PR and publishes when `NPM_TOKEN` is configured in the repository secrets.

@@ -27,6 +27,15 @@
 - Keep the Docusaurus site under `apps/docs` in sync with the normative spec
 - Spec version (`0.1`) is distinct from package semver
 
+## Releases (Changesets)
+
+- Publishable packages under `implementations/typescript/*` (notably `@deckify/dsvg`) version via Changesets
+- Any user-facing or publishable change to those packages MUST include a changeset file (run `pnpm changeset`, or add `.changeset/*.md`) — without it, the Release workflow will not open a version PR or publish to npm
+- Spec/schema/docs-only changes do not need a changeset unless a publishable package also changed
+- `dsvg-docs` is ignored by Changesets; do not version it
+- After merge to `main`, release.yml opens a version PR or publishes when `NPM_TOKEN` is set — see `apps/docs/docs/contributing/releases.md`
+- Husky pre-commit runs `scripts/check-changeset.mjs`: staged changes under publishable `implementations/typescript/*` packages require a staged `.changeset/*.md` (not README). Version-package commits (delete changesets + CHANGELOG) are allowed. Bypass only with `SKIP_CHANGESET_CHECK=1`
+
 ## Git Commits
 
 - When creating commit messages, always follow the `conventional-commit` skill at `.agents/skills/conventional-commit/SKILL.md`

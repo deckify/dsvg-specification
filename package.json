@@ -18,6 +18,7 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "pnpm test && changeset publish",
+    "check-changeset": "node ./scripts/check-changeset.mjs",
     "prepare": "husky"
   },
   "devDependencies": {
